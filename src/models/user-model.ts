@@ -1,3 +1,4 @@
+import { address } from "@prisma/client";
 import { MessageStepEnum } from "../enums/message-step-enum";
 
 export class User {
@@ -7,11 +8,11 @@ export class User {
 
   cpf: string;
 
-  cep: string;
-
   phone: string;
 
   step: MessageStepEnum;
+
+  address: address;
 
   created_at: Date;
 

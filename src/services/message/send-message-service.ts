@@ -9,7 +9,7 @@ class SendMessageService {
     this.client = TwilioClient(accountSid, authToken);
   }
 
-  public async sendMenssage(message: string, to: string) {
+  public async sendMenssage(message: string, to: string){
     const response = await this.client.messages.create({
       body: message,
       from: "whatsapp:+14155238886",

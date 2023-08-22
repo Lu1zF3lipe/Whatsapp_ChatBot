@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ReplyController } from "../controllers/reply";
+import { ReplyController } from "../controllers/reply/messageController";
 
 const routes = Router();
 

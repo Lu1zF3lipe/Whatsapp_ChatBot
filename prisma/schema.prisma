@@ -10,13 +10,26 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Users {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  cpf        String?  @unique
-  cep        String?   
+model users {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String?
+  cpf        String?
   step       String
-  phone      String   @unique
+  phone      String    @unique
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  address    address?
+}
+
+model address {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  cep        String?
+  logradouro String?
+  bairro     String?
+  localidade String?
+  uf         String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  user       users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    String   @db.ObjectId @unique
 }

@@ -1,32 +1,27 @@
 import { MessageStepEnum } from "../../enums/message-step-enum";
 import { MessageModel } from "../../models/message-model";
-import { userRepository } from "../../repositories/user.repository";
-import { IMessageContext } from "./message-context-interface";
+import { User } from "../../models/user-model";
+import { userRepository } from "../../repositories/user/user.repository";
 
-type EventListener = (
-  message: MessageModel,
-  userData: any
-) => Promise<string | undefined>;
+type EventListener = (message: MessageModel, userData: User) => Promise<void>;
 
 type Messagelistener = {
   [key: string]: EventListener | undefined;
 };
 
-export class MessageContextService implements IMessageContext {
+export class MessageContextService {
   private static listeners: Messagelistener = {};
 
   public static async handleMessage(message: MessageModel): Promise<void> {
-    const userInfo = {};
-    const currentState = MessageStepEnum.FIRST_STEP;
-    const listener = this.listeners[currentState];
+    if (!message.Body) return;
+
+    const user = await userRepository.findUserbyPhone(message.WaId);
+    const currentStep = user.step || MessageStepEnum.FIRST_MESSAGE_STEP;
+    const listener = this.listeners[currentStep];
 
     if (!listener) return;
 
-    const newState = await listener(message, userInfo);
-
-    if (newState && newState !== currentState) {
-      console.log("ALTERAÇÃO DE ESTADO", currentState, newState);
-    }
+    await listener(message, user);
   }
 
   public static listen(event: MessageStepEnum, listener: EventListener): void {

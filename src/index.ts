@@ -1,16 +1,9 @@
 import "dotenv/config";
+import "./services/message";
 import { prisma } from "./db";
-import { StartTunnel } from "./tunnel";
 import express from "express";
-import { routes } from "./routes";
-import { MessageContextService } from "./services/message/message-context-service";
-import { MessageStepEnum } from "./enums/message-step-enum";
-import { FirstStepMessage } from "./services/message/first-step";
-
-MessageContextService.listen(
-  MessageStepEnum.FIRST_STEP,
-  FirstStepMessage.handle
-);
+import { StartTunnel } from "./tunnel";
+import { routes } from "./routes/message.routes";
 
 const app = express();
 app.use(express.json());
@@ -25,7 +18,7 @@ app.use(routes);
 async function main() {
   await prisma.$connect();
   app.listen(3000, () => {
-    console.log("aplicaçao rodando");
+    console.log("aplicacao rodando");
     StartTunnel();
   });
 }

@@ -6,15 +6,16 @@ import { consultCEP } from "../../utils/consultCEP"
 import { sendMessageService } from "./send-message-service"
 
 export class AddressService {
-  public static async createAddress(message: MessageModel): Promise<User > {
-    const cep = message.Body
-    const address = await consultCEP(cep)
-    if ( !address ) {
-      return await sendMessageService.sendMenssage("o CEP informado nao é valido!!! Por favor digite um CEP valido", message.From)
-    }
-    const newUser = await userRepository.includeAddress(message.WaId, address)
+  public static async createAddress(message: MessageModel): Promise<User | undefined> {
+    const cep = message.Body;
+    const address = await consultCEP(cep);
 
-    return newUser;
+    if (!address) {
+      await sendMessageService.sendMenssage("o CEP informado nao é valido!!! Por favor digite um CEP valido", message.From);
+      return;
+    }
+
+    return userRepository.includeAddress(message.WaId, address);
   }
 
   public static async showAddress (user: User, message: MessageModel){

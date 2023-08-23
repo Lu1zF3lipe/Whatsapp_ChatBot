@@ -6,14 +6,16 @@ import { AddressService } from "../address-user-service";
 
 export class UserCepStep {
   public static async handle(message: MessageModel, user: User): Promise<void> {
-    await userRepository.updateStep(
-      {
-        step: MessageStepEnum.COMMAND_OPTION_STEP,
-      },
-      message.WaId
-    );
 
-    const newUser = await AddressService.createAddress(message)
-    await AddressService.showAddress(newUser, message)
+    const newUser = await AddressService.createAddress(message);
+    if (newUser) {
+        await userRepository.updateStep({
+          step: MessageStepEnum.COMMAND_OPTION_STEP,
+        },
+        message.WaId
+      );
+      
+      await AddressService.showAddress(newUser, message);
+    }
   }
 }

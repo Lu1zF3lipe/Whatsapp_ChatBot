@@ -1,53 +1,104 @@
-# INICIO
+# Twilio Whatsapp Bot
 
-## Primeira mensagem (FIRST_MESSAGE_STEP)
+Este repositório contem um projeto de um bot para o whatsapp utilizando a API da Twilio
 
-- Mensagem: Informe o seu nome completo
-- Ação: Cria registro do usuário no banco (MessageContextService)
-- Proximo Step: USERNAME_STEP
+## Variáveis de Ambiente
 
-## Nome do usuário (USERNAME_STEP)
+Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de ambiente no seu .env
 
-- Ação: Atualiza o registro com o nome do usuário
-- Mensagem: Informe o seu cpf
-- Proximo Step: CPF_STEP
+`TWILIO_ACCOUNT_SID`
 
-## CPF do usuário (CPF_STEP)
+`TWILIO_AUTH_TOKEN`
 
-- Validar o CPF do usuário
-  - Se for valido
-    - Ação: Atualiza o registro com o CPF do usuário
-    - Mensagem: Informe o seu CEP
-    - Proximo Step: CEP_STEP
-  - Se não for valido
-    - Ação: undefined
-    - Mensagem: Informe um CPF válido
-    - Proximo Step: undefined
+## Rodando localmente
 
-## CEP do usuário (CEP_STEP)
-
-- Ação: Atualiza o registro com o CEP do usuário
-- Mensagem: O seu CEP é {user.CEP}
-- Proximo Step: INFORMATION_STEP
-
-## Informa o usuário (INFORMATION_STEP)
-
-- Ação: undefined
-- Mensagem: as informações do usuário em si
-- Proximo Step: undefined
-
-## Como utilizar esse repositório?
-
-clone o repositório e instale as dependências
+Clone o projeto
 
 ```bash
-git clone https://github.com/Lu1zF3lipe/Whatsapp_ChatBot.git
-cd Whatsapp_ChatBot
-npm i
+  git clone https://github.com/Lu1zF3lipe/Whatsapp_ChatBot
 ```
 
-para rodar a aplicaçao rode o codigo e o app estara disponivel na porta 3000:
+Entre no diretório do projeto
 
 ```bash
-docker-compose up
+  cd Whatsapp_ChatBot
 ```
+
+Rode o docker compose
+
+```bash
+  docker-compose up
+```
+
+Crie um tunel para acessar a api pela web utilizando o [serveo](https://serveo.net) e adicione o link do callback no site da twilio
+
+```bash
+  ssh -R 80:localhost:3000 serveo.net
+```
+
+
+## Documentação
+
+### Steps para o cadastro
+
+Ao enviar a primeira mensagem o usuário inicia o fluxo no step **FIRST_MESSAGE_STEP**
+|Step|Valido|Proximo Step|Mensagem|
+|-|-|-|-|
+|FIRST_MESSAGE_STEP|✔️|USERNAME_STEP|Olá, seja bem vindo!!!\npara continuar com o cadastro informe o seu nome completo|
+|USERNAME_STEP|✔️|CPF_STEP|Perfeito!! Agora informe o seu CPF sem pontos, traços ou espaços|
+|CPF_STEP|✔️|CEP_STEP|Agora me informe o seu CEP|
+|CPF_STEP|❌| |o CPF informado nao é valido!!! Por favor digite um CPF valido|
+|CEP_STEP|✔️|COMMAND_OPTION_STEP|Seu endereço é:\n\nRua: {logradouro}\nbairro: {bairro}\ncidade: ${localidade}\nUF: ${uf}|
+|CEP_STEP|❌| |o CEP informado nao é valido!!! Por favor digite um CEP valido|
+
+### Commandos apos o cadastro
+
+Quando o usuário chega no step **COMMAND_OPTION_STEP** ao enviar uma mensagem que não está presente na lista de opções ele recebera a listagem de opções:
+
+```
+Escolha uma das opção abaixo:
+
+1) ver suas informações
+2) apagar cadastro
+3) ver endereço
+```
+
+### Opção 1 [ver suas informações]
+
+```
+Nome: {name}
+CPF: {cpf}
+CEP: {cep}
+```
+
+### Opção 2 [apagar cadastro]
+
+Quando o usuário escolher essa opção o cadastor no banco de dados será deletado oque acabara ocasionando de o usuário voltar para o step **FIRST_MESSAGE_STEP** por não possuir mais o cadastro no banco:
+
+```
+O seu cadastro foi deletado com sucesso! Para se cadastrar novamente envie qualquer mensagens!!
+```
+
+### Opção 3 [ver endereço]
+
+```
+Seu endereço é:
+
+rua: {logradouro}
+bairro: {bairro}
+cidade: {localidade}
+UF: {uf}
+```
+
+## Tecnologias Utilizada
+
+- [Node](https://nodejs.org/)
+- [Express](https://expressjs.com/pt-br/)
+- [MongoDB](https://www.mongodb.com/pt-br)
+- [Twilio](https://www.twilio.com/pt-br)
+- [Prisma](https://www.prisma.io/)
+- [Axios](https://axios-http.com/)
+
+## Licença
+
+[MIT](https://choosealicense.com/licenses/mit/)

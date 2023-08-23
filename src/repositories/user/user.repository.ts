@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { User } from "../../models/user-model";
-import { MessageModel } from "../../models/message-model";
 import { prisma } from "../../db";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";

@@ -19,5 +19,3 @@ class SendMessageService {
 }
 
 export const sendMessageService = new SendMessageService();
-
-//https://091dcede57a17f.loca.lt/api/send

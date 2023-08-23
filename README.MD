@@ -35,3 +35,19 @@
 - Ação: undefined
 - Mensagem: as informações do usuário em si
 - Proximo Step: undefined
+
+## Como utilizar esse repositório?
+
+clone o repositório e instale as dependências
+
+```bash
+git clone https://github.com/Lu1zF3lipe/Whatsapp_ChatBot.git
+cd Whatsapp_ChatBot
+npm i
+```
+
+para rodar a aplicaçao rode o codigo e o app estara disponivel na porta 3000:
+
+```bash
+docker-compose up
+```

@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  mongo:
+    build: ./docker/mongodb_replica
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: prisma
+      MONGO_REPLICA_HOST: mongo
+      MONGO_REPLICA_PORT: 27017
+    ports:
+      - '27017:27017'
+    networks:
+      - my_network
+
+  node_app:
+    image: node:latest
+    container_name: node_app
+    ports:
+      - '3000:3000'
+    networks:
+      - my_network
+    depends_on:
+      - mongo
+    volumes:
+      - ./:/app
+    working_dir: /app
+    environment:
+      DATABASE_URL: mongodb://mongo:27017/whatsapp_bot
+    command: sh -c "npm install && npx prisma db push && npm run dev"
+
+networks:
+  my_network:
+    driver: bridge
+
+volumes:
+  mongodb_data:

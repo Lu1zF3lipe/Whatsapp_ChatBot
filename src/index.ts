@@ -2,7 +2,6 @@ import "dotenv/config";
 import "./services/message";
 import { prisma } from "./db";
 import express from "express";
-import { StartTunnel } from "./tunnel";
 import { routes } from "./routes/message.routes";
 
 const app = express();
@@ -19,7 +18,6 @@ async function main() {
   await prisma.$connect();
   app.listen(3000, () => {
     console.log("aplicacao rodando");
-    StartTunnel();
   });
 }
 
